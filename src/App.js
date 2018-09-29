@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 // import SideBar from './components/SideBar';
-//import Notifications from './components/Notifications';
-import SnackbarContent from "@material-ui/core/SnackbarContent";
-import Clearfix from "material-kit-react/components/Clearfix/Clearfix";
+import Notifications from './components/Notifications';
+// import SnackbarContent from "@material-ui/core/SnackbarContent";
+// import Clearfix from "material-kit-react/components/Clearfix/Clearfix";
 import './App.css'
 
 import axios from 'axios'

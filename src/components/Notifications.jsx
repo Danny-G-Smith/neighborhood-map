@@ -4,7 +4,6 @@ import Check from "@material-ui/icons/Check";
 import Warning from "@material-ui/icons/Warning";
 // core components
 import SnackbarContent from "@material-ui/core/SnackbarContent";
-//import Clearfix from "Clearfix";
 import Clearfix from "material-kit-react/components/Clearfix/Clearfix";
 
 // SnackbarContent.propTypes = {
