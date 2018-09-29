@@ -1,9 +1,19 @@
 import React, { Component } from 'react'
+// import SideBar from './components/SideBar';
+//import Notifications from './components/Notifications';
+import SnackbarContent from "@material-ui/core/SnackbarContent";
+import Clearfix from "material-kit-react/components/Clearfix/Clearfix";
 import './App.css'
 
 import axios from 'axios'
-
 class App extends Component {
+
+
+   // this.toggleSideBar = this.toggleSideBar.bind(this);
+   //
+   // toggleSideBar () {
+   //    this.setState(state => ({ sidebarOpen: !state.sidebarOpen }));
+   // }
 
    /*
     https://www.youtube.com/watch?v=W5LhLZqj76s&feature=youtu.be
@@ -36,7 +46,7 @@ class App extends Component {
          client_id: '5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ',
          client_secret: 'HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK',
          query: 'food',
-         near: 'Warr Acres',
+         ll:    "35.53,-97.6",
          v: '20180926'
       }
 
@@ -94,6 +104,9 @@ class App extends Component {
    render () {
       return (
          <main>
+             {/*"default","error","inherit","primary","secondary","textPrimary","textSecondary"*/}
+            {/*"action", "classes", "className", "message"*/}
+             <SnackbarContent/>
             <div id="map"></div>
          </main>
       )
