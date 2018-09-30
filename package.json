@@ -5,9 +5,11 @@
   "dependencies": {
     "ajv": "^6.5.4",
     "axios": "^0.18.0",
-    "material-kit-react": "^1.2.0",
+    "materialize-css": "^1.0.0-rc.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-materialize": "^2.4.5",
+    "react-router-dom": "^4.3.1",
     "react-scripts": "1.1.5"
   },
   "scripts": {
