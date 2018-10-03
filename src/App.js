@@ -2,6 +2,12 @@ import React, { Component } from 'react'
 
 import { Footer, Navbar, NavItem } from 'react-materialize'
 import './App.css'
+
+// https://www.npmjs.com/package/prop-types
+import PropTypes from 'prop-types'; // ES6
+
+
+// https://www.npmjs.com/package/axios
 import axios from 'axios'
 import SideBar from './component/SideBar'
 import VenueList from './component/VenueList'
@@ -42,7 +48,7 @@ class App extends Component {
       }
 
       // {console.log(photos)}
-      //https://api.foursquare.com/v2/venues/search?client_id=5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ&client_secret=HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK&query=food&intent=browse&ll=35.522489,-97.619255&radius=10000&v=20180926
+      // https://api.foursquare.com/v2/venues/search?client_id=5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ&client_secret=HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK&query=food&intent=browse&ll=35.522489,-97.619255&radius=10000&v=20180926
       // Pass props to parent component in React.js
 
       axios.get(explore + new URLSearchParams(parameters),
@@ -103,6 +109,8 @@ class App extends Component {
       return (
 
          <main>
+             {/*https://materializecss.com/ documentation*/}
+             {/*https://react-materialize.github.io/#/*/}
             <Navbar brand='logo' right>
                <NavItem onClick={() => console.log('test click')}>Getting started</NavItem>
                <NavItem href='components.html'>Components</NavItem>
@@ -112,13 +120,14 @@ class App extends Component {
             {/*Toast*/}
             {/*</Toast>*/}
             <div className="App">
+
+                {/*https://developers.google.com/maps/documentation/javascript/tutorial*/}
                <div id="map"></div>
                <SideBar {...this.state}>
                   <input className="search"/>
                   <VenueList/>
                </SideBar>
                {console.log(this.venues)}
-               {/*<map {...this.state} handleMarkerClick={this.handleMarkerClick}></map>*/}
                <map></map>
             </div>
             <Footer copyrights="&copy; 2018 Copyright Text"
@@ -143,6 +152,14 @@ class App extends Component {
       )
    }
 }
+
+// Runtime type checking for React props and similar objects.
+// https://www.npmjs.com/package/prop-types
+const myPropTypes = {
+   venues: PropTypes.object,
+   names:  PropTypes.object,
+   name:   PropTypes.string
+};
 
 function loadScript (url) {
    var index = window.document.getElementsByTagName('script')[0]
