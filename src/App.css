@@ -35,7 +35,6 @@ nav, .nav {
 
 footer, .page-footer {
    background-color: #1EAAF1;
-
 }
 
 .venueList {
@@ -46,7 +45,7 @@ footer, .page-footer {
    background: #eee;
    list-style: none;
    padding: 5px;
-   margin: 10px 0 0;
+   margin: 6px 0 0;
    font-size: 18px;
    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
@@ -58,7 +57,12 @@ li {
 
 #map {
    width: calc( 100vw - 320px) !important;
-   height: calc(100vh - 300px);
+   height: calc(100vh - 298px);
+}
+
+.sideBar {
+   height: calc(100vh - 298px);
+   overflow-y: scroll;
 }
 
 @keyframes App-logo-spin {
@@ -70,11 +74,19 @@ li {
    }
 }
 
-
 input#search {
    width: 100%;
-   padding: 5px 10px;
+   padding: 5px 10px 0;
    line-height: 1.4;
    font-size: 18px;
    box-sizing: border-box;
+}
+
+ol.venueList {
+   margin-top: 0px;
+   padding-top: 0;
+}
+
+input[type=search]:not(.browser-default) {
+   margin: 0 !important;
 }

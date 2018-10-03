@@ -29,8 +29,8 @@ class App extends Component {
 
    getVenues = () => {
       const explore = 'https://api.foursquare.com/v2/venues/explore?'
-      const search  = 'https://api.foursquare.com/v2/venues/search?'
-      const venues  = 'https://api.foursquare.com/v2/venues/'
+      const search = 'https://api.foursquare.com/v2/venues/search?'
+      const venues = 'https://api.foursquare.com/v2/venues/'
       const parameters = {
          client_id: '5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ',
          client_secret: 'HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK',
@@ -52,7 +52,7 @@ class App extends Component {
          .then(response => {
             this.setState({
                venues: response.data.response.groups[0].items,
-               name:   response.data.response.groups[0].items[0].venue.name //[0].name
+               name: response.data.response.groups[0].items[0].venue.name //[0].name
             }, this.renderMap())
          })
          .catch(error => {
@@ -115,11 +115,11 @@ class App extends Component {
                <div id="map"></div>
                <SideBar {...this.state}>
                   <input className="search"/>
-                  <VenueList />
+                  <VenueList/>
                </SideBar>
                {console.log(this.venues)}
                {/*<map {...this.state} handleMarkerClick={this.handleMarkerClick}></map>*/}
-               <map> </map>
+               <map></map>
             </div>
             <Footer copyrights="&copy; 2018 Copyright Text"
                     moreLinks={
@@ -140,17 +140,17 @@ class App extends Component {
                   content.</p>
             </Footer>
          </main>
-   )
+      )
    }
-   }
+}
 
-   function loadScript (url) {
-      var index  = window.document.getElementsByTagName('script')[0]
-      var script = window.document.createElement('script')
-      script.src = url
-      script.async = true
-      script.defer = true
-      index.parentNode.insertBefore(script, index)
-   }
+function loadScript (url) {
+   var index = window.document.getElementsByTagName('script')[0]
+   var script = window.document.createElement('script')
+   script.src = url
+   script.async = true
+   script.defer = true
+   index.parentNode.insertBefore(script, index)
+}
 
-   export default App
+export default App
