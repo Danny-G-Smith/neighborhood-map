@@ -1,5 +1,8 @@
 .App {
    text-align: center;
+   display: flex;
+   flex-flow: row nowrap;
+   box-sizing: border-box;
 }
 
 .App-logo {
@@ -22,6 +25,42 @@
    font-size: large;
 }
 
+.sideBar {
+   width: 320px;
+}
+
+nav, .nav {
+   background-color: #2FA69A; /* #EC6F75;*/
+}
+
+footer, .page-footer {
+   background-color: #1EAAF1;
+
+}
+
+.venueList {
+   padding: 5px;
+}
+
+.venueItem {
+   background: #eee;
+   list-style: none;
+   padding: 5px;
+   margin: 10px 0 0;
+   font-size: 18px;
+   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+}
+
+li {
+   display: list-item;
+   text-align: -webkit-match-parent;
+}
+
+#map {
+   width: calc( 100vw - 320px) !important;
+   height: calc(100vh - 300px);
+}
+
 @keyframes App-logo-spin {
    from {
       transform: rotate(0deg);
@@ -31,8 +70,11 @@
    }
 }
 
-#map {
-   height: 100vh;
-   margin: 0;
-   padding: 0;
+
+input#search {
+   width: 100%;
+   padding: 5px 10px;
+   line-height: 1.4;
+   font-size: 18px;
+   box-sizing: border-box;
 }

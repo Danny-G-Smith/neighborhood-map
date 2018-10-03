@@ -1,18 +1,10 @@
 import React, { Component } from 'react'
 
-import { N, Footer, Navbar, NavItem } from 'react-materialize'
-import 'materialize-css/dist/css/materialize.min.css'
-import M from 'materialize-css/dist/js/materialize.min.js'
-//import {errorNotification, addNotification, moveNotification} from 'components/Notification'
-// import Footer from 'react-materialize/lib/Footer'
-// import Navbar from 'react-materialize/lib/Navbar'
-// import NavItem from 'react-materialize/lib/NavItem'
-//import {Toast} from './components/Toast'
-
+import { Footer, Navbar, NavItem } from 'react-materialize'
 import './App.css'
-//import { errornotification } from './components/Notification'
-
 import axios from 'axios'
+import SideBar from './component/SideBar'
+import VenueList from './component/VenueList'
 
 class App extends Component {
 
@@ -21,7 +13,9 @@ class App extends Component {
     */
 
    state = {
-      venues: []
+      venues: [],
+      names: [],
+      name: ''
    }
 
    componentDidMount () {
@@ -34,7 +28,9 @@ class App extends Component {
    }
 
    getVenues = () => {
-      const endPoint = 'https://api.foursquare.com/v2/venues/explore?'
+      const explore = 'https://api.foursquare.com/v2/venues/explore?'
+      const search  = 'https://api.foursquare.com/v2/venues/search?'
+      const venues  = 'https://api.foursquare.com/v2/venues/'
       const parameters = {
          client_id: '5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ',
          client_secret: 'HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK',
@@ -44,13 +40,19 @@ class App extends Component {
          radius: 10000,
          v: '20180908'
       }
+
+      // {console.log(photos)}
       //https://api.foursquare.com/v2/venues/search?client_id=5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ&client_secret=HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK&query=food&intent=browse&ll=35.522489,-97.619255&radius=10000&v=20180926
       // Pass props to parent component in React.js
 
-      axios.get(endPoint + new URLSearchParams(parameters))
+      axios.get(explore + new URLSearchParams(parameters),
+         search + new URLSearchParams(parameters),
+         venues + new URLSearchParams(parameters)
+      )
          .then(response => {
             this.setState({
-               venues: response.data.response.groups[0].items
+               venues: response.data.response.groups[0].items,
+               name:   response.data.response.groups[0].items[0].venue.name //[0].name
             }, this.renderMap())
          })
          .catch(error => {
@@ -94,60 +96,61 @@ class App extends Component {
             // Open An InfoWindow
             infowindow.open(map, marker)
          })
-      })
-
+      }) // .map
    }
 
    render () {
       return (
 
          <main>
-               <Navbar brand='logo' right>
-                  <NavItem onClick={() => console.log('test click')}>Getting started</NavItem>
-                  <NavItem href='components.html'>Components</NavItem>
-               </Navbar>
+            <Navbar brand='logo' right>
+               <NavItem onClick={() => console.log('test click')}>Getting started</NavItem>
+               <NavItem href='components.html'>Components</NavItem>
+            </Navbar>
 
-            {/*<Toast toast="here you go!" displayLength={4000}>*/}
-               {/*Toast*/}
+            {/*<Toast toast="here you go!">*/}
+            {/*Toast*/}
             {/*</Toast>*/}
-            {/*{window.react-materialize.toast('I am a toast!', 4000)}*/}
-
-
-
-            { N.toast({html: 'I am a toast!'})}
-
+            <div className="App">
                <div id="map"></div>
-
-               <Footer copyrights="&copy; 2018 Copyright Text"
-                       moreLinks={
-                          <a className="grey-text text-lighten-4 right" href="#!">More Links</a>
-                       }
-                       links={
-                          <ul>
-                             <li><a className="grey-text text-lighten-3" href="#!">Link 1</a></li>
-                             <li><a className="grey-text text-lighten-3" href="#!">Link 2</a></li>
-                             <li><a className="grey-text text-lighten-3" href="#!">Link 3</a></li>
-                             <li><a className="grey-text text-lighten-3" href="#!">Link 4</a></li>
-                          </ul>
-                       }
-                       className='example'
-               >
-                  <h5 className="white-text">Footer Content</h5>
-                  <p className="grey-text text-lighten-4">You can use rows and columns here to organize your footer
-                     content.</p>
-               </Footer>
+               <SideBar {...this.state}>
+                  <input className="search"/>
+                  <VenueList />
+               </SideBar>
+               {console.log(this.venues)}
+               {/*<map {...this.state} handleMarkerClick={this.handleMarkerClick}></map>*/}
+               <map> </map>
+            </div>
+            <Footer copyrights="&copy; 2018 Copyright Text"
+                    moreLinks={
+                       <a className="grey-text text-lighten-4 right" href="#!">More Links</a>
+                    }
+                    links={
+                       <ul>
+                          <li><a className="grey-text text-lighten-3" href="#!">Link 1</a></li>
+                          <li><a className="grey-text text-lighten-3" href="#!">Link 2</a></li>
+                          <li><a className="grey-text text-lighten-3" href="#!">Link 3</a></li>
+                          <li><a className="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                       </ul>
+                    }
+                    className='example'
+            >
+               <h5 className="white-text">Footer Content</h5>
+               <p className="grey-text text-lighten-4">You can use rows and columns here to organize your footer
+                  content.</p>
+            </Footer>
          </main>
-      )
+   )
    }
-}
+   }
 
-function loadScript (url) {
-   var index = window.document.getElementsByTagName('script')[0]
-   var script = window.document.createElement('script')
-   script.src = url
-   script.async = true
-   script.defer = true
-   index.parentNode.insertBefore(script, index)
-}
+   function loadScript (url) {
+      var index  = window.document.getElementsByTagName('script')[0]
+      var script = window.document.createElement('script')
+      script.src = url
+      script.async = true
+      script.defer = true
+      index.parentNode.insertBefore(script, index)
+   }
 
-export default App
+   export default App

@@ -5,7 +5,7 @@ function moveNotification(newShelf) {
       : window.Materialize.toast(`Removed from library`, 10000) // Remove book
 }
 
-function errornotification() {
+function errorNotification() {
    // Show notification for failed API request
    window.Materialize.toast('Connection Error', 10000)
 }
@@ -16,4 +16,4 @@ function addNotification(newShelf) {
 }
 
 
-export { moveNotification, errornotification, addNotification };
+export { moveNotification, errorNotification, addNotification };
