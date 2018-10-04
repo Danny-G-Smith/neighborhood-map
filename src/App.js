@@ -10,7 +10,6 @@ import PropTypes from 'prop-types'; // ES6
 import axios from 'axios'
 import SideBar from './component/SideBar'
 import VenueList from './component/VenueList'
-import SearchVenue from './component/SearchVenue'
 
 class App extends Component {
 
