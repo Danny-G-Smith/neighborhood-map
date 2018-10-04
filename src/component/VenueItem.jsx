@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
 
-class VenueItem extends Component {
-   render () {
+const VenueItem = (props) => {
+ 
       return (
          <li className="venueItem">
-            Hi Danny
+            {props.name}
          </li>)
-   }
+   
 }
 
 export default VenueItem

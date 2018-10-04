@@ -6,11 +6,11 @@ import './App.css'
 // https://www.npmjs.com/package/prop-types
 import PropTypes from 'prop-types'; // ES6
 
-
 // https://www.npmjs.com/package/axios
 import axios from 'axios'
 import SideBar from './component/SideBar'
 import VenueList from './component/VenueList'
+import SearchVenue from './component/SearchVenue'
 
 class App extends Component {
 
@@ -20,8 +20,17 @@ class App extends Component {
 
    state = {
       venues: [],
-      names: [],
-      name: ''
+      names:  [],
+      name:   '',
+      searchString: ''
+   }
+
+   updateSearchString = (searchString) => {
+       if (searchString){
+        this.setState({ searchString });
+       } else {
+           this.setState({ searchString:''});
+       }
    }
 
    componentDidMount () {
@@ -58,6 +67,7 @@ class App extends Component {
          .then(response => {
             this.setState({
                venues: response.data.response.groups[0].items,
+               names : response.data.response.groups[0].items.map(element => element.venue.name),
                name: response.data.response.groups[0].items[0].venue.name //[0].name
             }, this.renderMap())
          })
@@ -83,7 +93,8 @@ class App extends Component {
 
       // Display Dynamic Markers
       this.state.venues.map(myVenue => {
-
+         //if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase()))
+         // { return
          var contentString = `${myVenue.venue.name}`
 
          // Create A Marker
@@ -91,6 +102,7 @@ class App extends Component {
             position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
             map: map,
             title: myVenue.venue.name
+         //}
          })
 
          // Click on A Marker!
@@ -123,7 +135,9 @@ class App extends Component {
 
                 {/*https://developers.google.com/maps/documentation/javascript/tutorial*/}
                <div id="map"></div>
-               <SideBar {...this.state}>
+               <SideBar venues={this.state.names.filter(name => name.toLowerCase().includes(this.state.searchString.toLowerCase()))}
+                        updateSearchString={this.updateSearchString}
+               >
                   <input className="search"/>
                   <VenueList/>
                </SideBar>
@@ -134,19 +148,7 @@ class App extends Component {
                     moreLinks={
                        <a className="grey-text text-lighten-4 right" href="#!">More Links</a>
                     }
-                    links={
-                       <ul>
-                          <li><a className="grey-text text-lighten-3" href="#!">Link 1</a></li>
-                          <li><a className="grey-text text-lighten-3" href="#!">Link 2</a></li>
-                          <li><a className="grey-text text-lighten-3" href="#!">Link 3</a></li>
-                          <li><a className="grey-text text-lighten-3" href="#!">Link 4</a></li>
-                       </ul>
-                    }
-                    className='example'
             >
-               <h5 className="white-text">Footer Content</h5>
-               <p className="grey-text text-lighten-4">You can use rows and columns here to organize your footer
-                  content.</p>
             </Footer>
          </main>
       )
