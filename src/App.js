@@ -19,17 +19,18 @@ class App extends Component {
 
    state = {
       venues: [],
-      names:  [],
-      name:   '',
+      names: [],
+      venueID: [],
+      short:   [],
       searchString: ''
    }
 
    updateSearchString = (searchString) => {
-       if (searchString){
-        this.setState({ searchString });
-       } else {
-           this.setState({ searchString:''});
-       }
+      if (searchString) {
+         this.setState({searchString});
+      } else {
+         this.setState({searchString: ''});
+      }
    }
 
    componentDidMount () {
@@ -43,8 +44,10 @@ class App extends Component {
 
    getVenues = () => {
       const explore = 'https://api.foursquare.com/v2/venues/explore?'
-      const search = 'https://api.foursquare.com/v2/venues/search?'
-      const venues = 'https://api.foursquare.com/v2/venues/'
+      const search  = 'https://api.foursquare.com/v2/venues/search?'
+      const venues  = 'https://api.foursquare.com/v2/venues/'
+      const short   = 'https://api.foursquare.com/v2/venues/'
+
       const parameters = {
          client_id: '5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ',
          client_secret: 'HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK',
@@ -61,13 +64,15 @@ class App extends Component {
 
       axios.get(explore + new URLSearchParams(parameters),
          search + new URLSearchParams(parameters),
-         venues + new URLSearchParams(parameters)
+         venues + new URLSearchParams(parameters),
+         short  + new URLSearchParams(parameters),
       )
          .then(response => {
             this.setState({
-               venues: response.data.response.groups[0].items,
-               names : response.data.response.groups[0].items.map(element => element.venue.name),
-               name: response.data.response.groups[0].items[0].venue.name //[0].name
+               venueID: response.data.response.groups[0].items.map(element => element.venue.id),
+               venues:  response.data.response.groups[0].items,
+               names:   response.data.response.groups[0].items.map(element => element.venue.name),
+               short:   response.data.response.groups[0].items.map(element => element.venue.categories[0].shortName),
             }, this.renderMap())
          })
          .catch(error => {
@@ -92,17 +97,22 @@ class App extends Component {
 
       // Display Dynamic Markers
       this.state.venues.map(myVenue => {
-         //if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase()))
-         // { return
+         // if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase()))
+         //  { //return
          var contentString = `${myVenue.venue.name}`
 
          // Create A Marker
          var marker = new window.google.maps.Marker({
             position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
             map: map,
-            title: myVenue.venue.name
-         //}
+            title: myVenue.venue.name,
+            icon: {
+               url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"
+            }
          })
+         // } else {
+         //
+         // }
 
          // Click on A Marker!
          marker.addListener('click', function () {
@@ -140,7 +150,7 @@ class App extends Component {
                   <input className="search"/>
                   <VenueList/>
                </SideBar>
-               {console.log(this.venues)}
+               {/*{console.log(this.venues)}*/}
                <map></map>
             </div>
             <Footer copyrights="&copy; 2018 Copyright Text"
@@ -157,9 +167,11 @@ class App extends Component {
 // Runtime type checking for React props and similar objects.
 // https://www.npmjs.com/package/prop-types
 const myPropTypes = {
-   venues: PropTypes.object,
-   names:  PropTypes.object,
-   name:   PropTypes.string
+   venues:  PropTypes.object,
+   names:   PropTypes.object,
+   photos:  PropTypes.object,
+   venueID: PropTypes.object,
+   short:   PropTypes.object,
 };
 
 function loadScript (url) {
@@ -172,3 +184,34 @@ function loadScript (url) {
 }
 
 export default App
+
+// "American"
+// "American"
+// "American"
+// "Asian"
+// "Asian"
+// "Burgers"
+// "Burgers"
+// "Chinese"
+// "Chinese"
+// "Chinese"
+// "Deli / Bodega"
+// "Diner"
+// "Diner"
+// "Fast Food"
+// "Indian"
+// "Indian"
+// "Mediterranean"
+// "Mexican"
+// "Mexican"
+// "Mexican"
+// "Mexican"
+// "Mexican"
+// "Middle Eastern"
+// "Pizza"
+// "Pizza"
+// "Restaurant"
+// "Sandwiches"
+// "Seafood"
+// "Steakhouse"
+// "Tacos"
