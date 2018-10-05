@@ -2,10 +2,8 @@ import React, { Component } from 'react'
 
 import { Footer, Navbar, NavItem } from 'react-materialize'
 import './App.css'
-
 // https://www.npmjs.com/package/prop-types
-import PropTypes from 'prop-types'; // ES6
-
+import PropTypes from 'prop-types' // ES6
 // https://www.npmjs.com/package/axios
 import axios from 'axios'
 import SideBar from './component/SideBar'
@@ -21,16 +19,16 @@ class App extends Component {
       venues: [],
       names: [],
       venueID: [],
-      short:   [],
+      short: [],
       searchString: ''
    }
 
    updateSearchString = (searchString) => {
-     if (searchString) {
-         this.setState({searchString});
-     } else {
-        this.setState({searchString: ''});
-     }
+      if (searchString) {
+         this.setState({searchString})
+      } else {
+         this.setState({searchString: ''})
+      }
    }
 
    componentDidMount () {
@@ -44,9 +42,9 @@ class App extends Component {
 
    getVenues = () => {
       const explore = 'https://api.foursquare.com/v2/venues/explore?'
-      const search  = 'https://api.foursquare.com/v2/venues/search?'
-      const venues  = 'https://api.foursquare.com/v2/venues/'
-      const short   = 'https://api.foursquare.com/v2/venues/'
+      const search = 'https://api.foursquare.com/v2/venues/search?'
+      const venues = 'https://api.foursquare.com/v2/venues/'
+      const short = 'https://api.foursquare.com/v2/venues/'
 
       const parameters = {
          client_id: '5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ',
@@ -65,14 +63,14 @@ class App extends Component {
       axios.get(explore + new URLSearchParams(parameters),
          search + new URLSearchParams(parameters),
          venues + new URLSearchParams(parameters),
-         short  + new URLSearchParams(parameters),
+         short + new URLSearchParams(parameters),
       )
          .then(response => {
             this.setState({
                venueID: response.data.response.groups[0].items.map(element => element.venue.id),
-               venues:  response.data.response.groups[0].items,
-               names:   response.data.response.groups[0].items.map(element => element.venue.name),
-               short:   response.data.response.groups[0].items.map(element => element.venue.categories[0].shortName),
+               venues: response.data.response.groups[0].items,
+               names: response.data.response.groups[0].items.map(element => element.venue.name),
+               short: response.data.response.groups[0].items.map(element => element.venue.categories[0].shortName),
             }, this.renderMap())
          })
          .catch(error => {
@@ -98,21 +96,21 @@ class App extends Component {
       // Display Dynamic Markers
       this.state.venues.map(myVenue => {
          //debugger
-         console.log(this.state.searchString)
-          if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase()))
-           { //return
-         var contentString = `${myVenue.venue.name}`
+         //this.searchString = this.state.searchString;
+         console.log(this.searchString)
+         if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase())) { //return
+            var contentString = `${myVenue.venue.name}`
 
-         // Create A Marker
-         var marker = new window.google.maps.Marker({
-            position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
-            map: map,
-            title: myVenue.venue.name,
-            onClick: this.onMapClicked,
-            icon: {
-               url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"
-            }
-         })
+            // Create A Marker
+            var marker = new window.google.maps.Marker({
+               position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
+               map: map,
+               title: myVenue.venue.name,
+               onClick: this.onMapClicked,
+               icon: {
+                  url: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
+               }
+            })
          } else {
             // no op
          }
@@ -134,8 +132,8 @@ class App extends Component {
       return (
 
          <main>
-             {/*https://materializecss.com/ documentation*/}
-             {/*https://react-materialize.github.io/#/*/}
+            {/*https://materializecss.com/ documentation*/}
+            {/*https://react-materialize.github.io/#/*/}
             <Navbar brand='logo' right>
                <NavItem onClick={() => console.log('test click')}>Getting started</NavItem>
                <NavItem href='components.html'>Components</NavItem>
@@ -146,10 +144,11 @@ class App extends Component {
             {/*</Toast>*/}
             <div className="App">
 
-                {/*https://developers.google.com/maps/documentation/javascript/tutorial*/}
+               {/*https://developers.google.com/maps/documentation/javascript/tutorial*/}
                <div id="map"></div>
-               <SideBar venues={this.state.names.filter(name => name.toLowerCase().includes(this.state.searchString.toLowerCase()))}
-                        updateSearchString={this.updateSearchString}
+               <SideBar
+                  venues={this.state.names.filter(name => name.toLowerCase().includes(this.state.searchString.toLowerCase()))}
+                  updateSearchString={this.updateSearchString}
                >
                   {/*<input className="search"/>*/}
                   <VenueList/>
@@ -171,12 +170,12 @@ class App extends Component {
 // Runtime type checking for React props and similar objects.
 // https://www.npmjs.com/package/prop-types
 const myPropTypes = {
-   venues:  PropTypes.object,
-   names:   PropTypes.object,
-   photos:  PropTypes.object,
+   venues: PropTypes.object,
+   names: PropTypes.object,
+   photos: PropTypes.object,
    venueID: PropTypes.object,
-   short:   PropTypes.object,
-};
+   short: PropTypes.object,
+}
 
 function loadScript (url) {
    var index = window.document.getElementsByTagName('script')[0]
