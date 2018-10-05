@@ -26,11 +26,11 @@ class App extends Component {
    }
 
    updateSearchString = (searchString) => {
-      if (searchString) {
+     if (searchString) {
          this.setState({searchString});
-      } else {
-         this.setState({searchString: ''});
-      }
+     } else {
+        this.setState({searchString: ''});
+     }
    }
 
    componentDidMount () {
@@ -97,8 +97,10 @@ class App extends Component {
 
       // Display Dynamic Markers
       this.state.venues.map(myVenue => {
-         // if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase()))
-         //  { //return
+         //debugger
+         console.log(this.state.searchString)
+          if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase()))
+           { //return
          var contentString = `${myVenue.venue.name}`
 
          // Create A Marker
@@ -106,13 +108,14 @@ class App extends Component {
             position: {lat: myVenue.venue.location.lat, lng: myVenue.venue.location.lng},
             map: map,
             title: myVenue.venue.name,
+            onClick: this.onMapClicked,
             icon: {
                url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"
             }
          })
-         // } else {
-         //
-         // }
+         } else {
+            // no op
+         }
 
          // Click on A Marker!
          marker.addListener('click', function () {
@@ -123,6 +126,7 @@ class App extends Component {
             // Open An InfoWindow
             infowindow.open(map, marker)
          })
+
       }) // .map
    }
 
@@ -147,10 +151,10 @@ class App extends Component {
                <SideBar venues={this.state.names.filter(name => name.toLowerCase().includes(this.state.searchString.toLowerCase()))}
                         updateSearchString={this.updateSearchString}
                >
-                  <input className="search"/>
+                  {/*<input className="search"/>*/}
                   <VenueList/>
                </SideBar>
-               {/*{console.log(this.venues)}*/}
+               {console.log(this.venues)}
                <map></map>
             </div>
             <Footer copyrights="&copy; 2018 Copyright Text"
