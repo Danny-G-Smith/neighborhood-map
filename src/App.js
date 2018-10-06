@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-import { Footer, Navbar, NavItem } from 'react-materialize'
+import { Navbar, NavItem } from 'react-materialize'
 import './App.css'
 // https://www.npmjs.com/package/prop-types
 import PropTypes from 'prop-types' // ES6
@@ -22,7 +22,7 @@ class App extends Component {
       short: [],
       searchString: '',
       markers: [],
-      photo:   [],
+      photo: [],
       photoURL: []
    }
 
@@ -58,44 +58,32 @@ class App extends Component {
          v: '20180908'
       }
 
-      const addAnimaLink = ({ response }) => {
-         let photos = response.data.response.photos.items;
-         let photoURL;
-         // photos.forEach(photo => {
-         for ( let k = 0; k < this.state.currentlyDisplayed.length; k++) {
-            photoURL = `${photo.prefix}${photo.height}x${photo.width}${photo.suffix}`
-         }
 
-         if ( `if (this.name === marker.name)`)  {
-           {infoWindows[k].open(map, marker)}
-         }
-      }
 
       // {console.log(photos)}
       // https://api.foursquare.com/v2/venues/search?client_id=5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ&client_secret=HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK&query=food&intent=browse&ll=35.522489,-97.619255&radius=10000&v=20180926
       // Pass props to parent component in React.js
 
-      axios.get(explore + new URLSearchParams(parameters),
-         search + new URLSearchParams(parameters),
-         venues + new URLSearchParams(parameters),
+      axios.get(explore + new URLSearchParams(parameters)),
+      search + new URLSearchParams(parameters),
+      venues + new URLSearchParams(parameters)
 
-      )
          .then(response => {
             // let photos = response.data.response.photos.items
             // photos.forEach(photo => {
             //    let photoURL = `${photo.prefix}${photo.height}x${photo.width}${photo.suffix}`
             // })
 
-            addAnimaLink();
+            addAnimaLink()
 
             this.setState({
-               venueID:   response.data.response.groups[0].items.map(element => element.venue.id),
-               venues:    response.data.response.groups[0].items,
-               names:     response.data.response.groups[0].items.map(element => element.venue.name),
-               address:   response.data.response.groups[0].items.map(element => element.venue.location.formattedAddress),
-               short:     response.data.response.groups[0].items.map(element => element.venue.categories[0].shortName),
+               venueID: response.data.response.groups[0].items.map(element => element.venue.id),
+               venues:  response.data.response.groups[0].items,
+               names:   response.data.response.groups[0].items.map(element => element.venue.name),
+               address: response.data.response.groups[0].items.map(element => element.venue.location.formattedAddress),
+               short:   response.data.response.groups[0].items.map(element => element.venue.categories[0].shortName),
                //photoURLs: [this.state.photoURLs, photoURL]
-            //}))
+               //}))
                // prefix:  response.data.response.photos.items[0].map(element => element.prefix),
                // suffix:  response.data.response.photos.items[0].map(element => element.suffix),
             }, this.renderMap())
@@ -103,6 +91,20 @@ class App extends Component {
          .catch(error => {
             console.log('ERROR!! ' + error)
          })
+   }
+
+   const addAnimaLink = ({response, infoWindows}) => {
+      let photos = response.data.response.photos.items
+      let photoURL
+      photos.forEach(photo => {
+         for (let k = 0; k < this.state.currentlyDisplayed.length; k++) {
+            photoURL = `${photo.prefix}${photo.height}x${photo.width}${photo.suffix}`
+         }
+
+         if (`if (this.name === marker.name)`) {
+            {infoWindows[k].open(map, marker)}
+         }
+      })
    }
 
    // Client ID
@@ -128,10 +130,10 @@ class App extends Component {
          if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase())) { //return
             var contentString =
                `${myVenue.venue.name + '<br>' +
-                  myVenue.venue.location.formattedAddress[0] + '<br>' +
-                  myVenue.venue.location.formattedAddress[1] + '<br>' +
-                  myVenue.venue.location.formattedAddress[2] + '<br>' 
-               }`
+               myVenue.venue.location.formattedAddress[0] + '<br>' +
+               myVenue.venue.location.formattedAddress[1] + '<br>' +
+               myVenue.venue.location.formattedAddress[2] + '<br>'
+                  }`
 
             // Create A Marker
             var marker = new window.google.maps.Marker({
