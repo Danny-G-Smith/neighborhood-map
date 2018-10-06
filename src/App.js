@@ -19,6 +19,8 @@ class App extends Component {
       venues: [],
       names: [],
       venueID: [],
+      prefix: [],
+      suffix: [],
       short: [],
       searchString: ''
    }
@@ -45,8 +47,12 @@ class App extends Component {
       const search = 'https://api.foursquare.com/v2/venues/search?'
       const venues = 'https://api.foursquare.com/v2/venues/'
       const short = 'https://api.foursquare.com/v2/venues/'
+      const prefix = 'https://api.foursquare.com/v2/venues/'
+      const suffix = 'https://api.foursquare.com/v2/venues/'
 
-      const parameters = {
+
+
+         const parameters = {
          client_id: '5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ',
          client_secret: 'HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK',
          query: 'food',
@@ -64,13 +70,17 @@ class App extends Component {
          search + new URLSearchParams(parameters),
          venues + new URLSearchParams(parameters),
          short + new URLSearchParams(parameters),
+         prefix + new URLSearchParams(parameters),
+         suffix + new URLSearchParams(parameters),
       )
          .then(response => {
             this.setState({
                venueID: response.data.response.groups[0].items.map(element => element.venue.id),
-               venues: response.data.response.groups[0].items,
-               names: response.data.response.groups[0].items.map(element => element.venue.name),
-               short: response.data.response.groups[0].items.map(element => element.venue.categories[0].shortName),
+               venues:  response.data.response.groups[0].items,
+               names:   response.data.response.groups[0].items.map(element => element.venue.name),
+               short:   response.data.response.groups[0].items.map(element => element.venue.categories[0].shortName),
+               prefix:  response.data.response.photos.items[0].map(element => element.prefix),
+               suffix:  response.data.response.photos.items[0].map(element => element.suffix)
             }, this.renderMap())
          })
          .catch(error => {
@@ -99,7 +109,7 @@ class App extends Component {
          //this.searchString = this.state.searchString;
          console.log(this.searchString)
          if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase())) { //return
-            var contentString = `${myVenue.venue.name}`
+            var contentString = `${myVenue.venue.name + '<br>' + myVenue.venue.id}`
 
             // Create A Marker
             var marker = new window.google.maps.Marker({
@@ -134,7 +144,7 @@ class App extends Component {
          <main>
             {/*https://materializecss.com/ documentation*/}
             {/*https://react-materialize.github.io/#/*/}
-            <Navbar brand='logo' right>
+            <Navbar brand='logo'>
                <NavItem onClick={() => console.log('test click')}>Getting started</NavItem>
                <NavItem href='components.html'>Components</NavItem>
             </Navbar>
@@ -156,12 +166,10 @@ class App extends Component {
                {console.log(this.venues)}
                <map></map>
             </div>
-            <Footer copyrights="&copy; 2018 Copyright Text"
-                    moreLinks={
-                       <a className="grey-text text-lighten-4 right" href="#!">More Links</a>
-                    }
-            >
-            </Footer>
+            <footer>
+               <span className="copyrights=">&copy; 2018 Copyright Text </span>
+               <span className="more-links"><a className="grey-text text-lighten-4" href="#!">More Links</a></span>
+            </footer>
          </main>
       )
    }
@@ -175,6 +183,8 @@ const myPropTypes = {
    photos: PropTypes.object,
    venueID: PropTypes.object,
    short: PropTypes.object,
+   prefix: PropTypes.object,
+   suffix: PropTypes.object,
 }
 
 function loadScript (url) {
@@ -218,3 +228,9 @@ export default App
 // "Seafood"
 // "Steakhouse"
 // "Tacos"
+
+// https://api.foursquare.com/v2/venues/explore
+// https://api.foursquare.com/v2/venues/explore?client_id=5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ&client_secret=HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK&query=food&intent=browse&v=20181001&ll=35.522489,-97.619255&radius=10000
+// https://api.foursquare.com/v2/venues/VENUE_ID/photos?client_id=5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ&client_secret=HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK&query=food&intent=browse&v=20181001&ll=35.522489,-97.619255&radius=10000
+
+//   4d950ba129352d4327a3dec1

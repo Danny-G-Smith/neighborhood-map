@@ -65,6 +65,31 @@ li {
    overflow-y: scroll;
 }
 
+.nav-wrapper .col {
+   justify-content: space-around;
+   display: flex;
+}
+
+nav .brand-logo {
+   justify-content: flex-start  !important;
+   position: inherit;
+   display: flex !important;
+}
+
+.page-footer {
+   justify-content: space-around;
+   display: flex;
+}
+
+
+
+.page-footer .container,
+.page-footer .footer-copyright {
+   justify-content: flex-start  !important;
+   position: inherit;
+   display: flex !important;
+}
+
 @keyframes App-logo-spin {
    from {
       transform: rotate(0deg);
