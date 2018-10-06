@@ -19,10 +19,11 @@ class App extends Component {
       venues: [],
       names: [],
       venueID: [],
-      prefix: [],
-      suffix: [],
       short: [],
-      searchString: ''
+      searchString: '',
+      markers: [],
+      photo:   [],
+      photoURL: []
    }
 
    updateSearchString = (searchString) => {
@@ -46,13 +47,8 @@ class App extends Component {
       const explore = 'https://api.foursquare.com/v2/venues/explore?'
       const search = 'https://api.foursquare.com/v2/venues/search?'
       const venues = 'https://api.foursquare.com/v2/venues/'
-      const short = 'https://api.foursquare.com/v2/venues/'
-      const prefix = 'https://api.foursquare.com/v2/venues/'
-      const suffix = 'https://api.foursquare.com/v2/venues/'
 
-
-
-         const parameters = {
+      const parameters = {
          client_id: '5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ',
          client_secret: 'HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK',
          query: 'food',
@@ -62,6 +58,19 @@ class App extends Component {
          v: '20180908'
       }
 
+      const addAnimaLink = ({ response }) => {
+         let photos = response.data.response.photos.items;
+         let photoURL;
+         // photos.forEach(photo => {
+         for ( let k = 0; k < this.state.currentlyDisplayed.length; k++) {
+            photoURL = `${photo.prefix}${photo.height}x${photo.width}${photo.suffix}`
+         }
+
+         if ( `if (this.name === marker.name)`)  {
+           {infoWindows[k].open(map, marker)}
+         }
+      }
+
       // {console.log(photos)}
       // https://api.foursquare.com/v2/venues/search?client_id=5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ&client_secret=HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK&query=food&intent=browse&ll=35.522489,-97.619255&radius=10000&v=20180926
       // Pass props to parent component in React.js
@@ -69,18 +78,26 @@ class App extends Component {
       axios.get(explore + new URLSearchParams(parameters),
          search + new URLSearchParams(parameters),
          venues + new URLSearchParams(parameters),
-         short + new URLSearchParams(parameters),
-         prefix + new URLSearchParams(parameters),
-         suffix + new URLSearchParams(parameters),
+
       )
          .then(response => {
+            // let photos = response.data.response.photos.items
+            // photos.forEach(photo => {
+            //    let photoURL = `${photo.prefix}${photo.height}x${photo.width}${photo.suffix}`
+            // })
+
+            addAnimaLink();
+
             this.setState({
-               venueID: response.data.response.groups[0].items.map(element => element.venue.id),
-               venues:  response.data.response.groups[0].items,
-               names:   response.data.response.groups[0].items.map(element => element.venue.name),
-               short:   response.data.response.groups[0].items.map(element => element.venue.categories[0].shortName),
-               prefix:  response.data.response.photos.items[0].map(element => element.prefix),
-               suffix:  response.data.response.photos.items[0].map(element => element.suffix)
+               venueID:   response.data.response.groups[0].items.map(element => element.venue.id),
+               venues:    response.data.response.groups[0].items,
+               names:     response.data.response.groups[0].items.map(element => element.venue.name),
+               address:   response.data.response.groups[0].items.map(element => element.venue.location.formattedAddress),
+               short:     response.data.response.groups[0].items.map(element => element.venue.categories[0].shortName),
+               //photoURLs: [this.state.photoURLs, photoURL]
+            //}))
+               // prefix:  response.data.response.photos.items[0].map(element => element.prefix),
+               // suffix:  response.data.response.photos.items[0].map(element => element.suffix),
             }, this.renderMap())
          })
          .catch(error => {
@@ -105,11 +122,16 @@ class App extends Component {
 
       // Display Dynamic Markers
       this.state.venues.map(myVenue => {
-         //debugger
+
          //this.searchString = this.state.searchString;
-         console.log(this.searchString)
+         // console.log(this.searchString)
          if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase())) { //return
-            var contentString = `${myVenue.venue.name + '<br>' + myVenue.venue.id}`
+            var contentString =
+               `${myVenue.venue.name + '<br>' +
+                  myVenue.venue.location.formattedAddress[0] + '<br>' +
+                  myVenue.venue.location.formattedAddress[1] + '<br>' +
+                  myVenue.venue.location.formattedAddress[2] + '<br>' 
+               }`
 
             // Create A Marker
             var marker = new window.google.maps.Marker({
@@ -185,6 +207,7 @@ const myPropTypes = {
    short: PropTypes.object,
    prefix: PropTypes.object,
    suffix: PropTypes.object,
+   markers: PropTypes.array.isRequired,
 }
 
 function loadScript (url) {
