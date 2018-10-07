@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+//import ReactDOM from 'react-dom'
 
 import { Footer, Navbar, NavItem } from 'react-materialize'
 import './App.css'
@@ -10,6 +11,9 @@ import PropTypes from 'prop-types'; // ES6
 import axios from 'axios'
 import SideBar from './component/SideBar'
 import VenueList from './component/VenueList'
+
+require('dotenv').config()
+console.log(`${process.env.REACT_APP_DEV_API_URL}`)
 
 class App extends Component {
 
@@ -49,13 +53,13 @@ class App extends Component {
       const short   = 'https://api.foursquare.com/v2/venues/'
 
       const parameters = {
-         client_id: '5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ',
-         client_secret: 'HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK',
-         query: 'food',
-         intent: 'browse',
-         ll: '35.522489,-97.619255',//35.522489, -97.619255
-         radius: 10000,
-         v: '20180908'
+         client_id:     `${process.env.REACT_APP_client_id}`,
+         client_secret: `${process.env.REACT_APP_client_secret}`,
+         query:         'food',
+         intent:        'browse',
+         ll:            '35.522489,-97.619255',//35.522489, -97.619255
+         radius:        10000,
+         v:            `${process.env.REACT_APP_v}` //'20180908'
       }
 
       // {console.log(photos)}
@@ -80,6 +84,8 @@ class App extends Component {
          })
    }
 
+
+
    // Client ID
    // 5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ
    // Client Secret
@@ -100,6 +106,7 @@ class App extends Component {
          // if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase()))
          //  { //return
          var contentString = `${myVenue.venue.name}`
+         //var currentVenueItem =
 
          // Create A Marker
          var marker = new window.google.maps.Marker({
@@ -114,7 +121,9 @@ class App extends Component {
          //
          // }
 
+         let currentVenueItem
          // Click on A Marker!
+         //console.log(marker);
          marker.addListener('click', function () {
 
             // Change the content
@@ -185,33 +194,16 @@ function loadScript (url) {
 
 export default App
 
-// "American"
-// "American"
-// "American"
-// "Asian"
-// "Asian"
-// "Burgers"
-// "Burgers"
-// "Chinese"
-// "Chinese"
-// "Chinese"
-// "Deli / Bodega"
-// "Diner"
-// "Diner"
-// "Fast Food"
-// "Indian"
-// "Indian"
-// "Mediterranean"
-// "Mexican"
-// "Mexican"
-// "Mexican"
-// "Mexican"
-// "Mexican"
-// "Middle Eastern"
-// "Pizza"
-// "Pizza"
-// "Restaurant"
-// "Sandwiches"
-// "Seafood"
-// "Steakhouse"
-// "Tacos"
+class Example extends React.Component{
+   simulateClick(e) {
+      e.click()
+   }
+   render(){
+      return <div className="page-footer"
+                  ref={this.simulateClick} onClick={()=> console.log('clicked')}>
+         hello
+      </div>
+   }
+}
+
+//ReactDOM.render(<Example/>, document.getElementById('app'))

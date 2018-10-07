@@ -5,7 +5,7 @@ class SideBar extends Component {
    render () {
       return (
          <div className="sideBar">
-            <input  type={"search"} 
+            <input  type={"search"}
                     id={"search"}
                placeholder={"Filter Venues"}
                     onChange={(event) => this.props.updateSearchString(event.target.value)}
