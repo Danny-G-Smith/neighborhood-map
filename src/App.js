@@ -1,18 +1,15 @@
 import React, { Component } from 'react'
 //import ReactDOM from 'react-dom'
-import SquareAPI from "./API/"
-// time at 10:56
-
+import SquareAPI from './API/'
 import { Footer, Navbar, NavItem } from 'react-materialize'
 import './App.css'
-
 // https://www.npmjs.com/package/prop-types
-import PropTypes from 'prop-types'; // ES6
-
+import PropTypes from 'prop-types' // ES6
 // https://www.npmjs.com/package/axios
 import axios from 'axios'
 import SideBar from './component/SideBar'
 import VenueList from './component/VenueList'
+// time at 10:56
 
 require('dotenv').config()
 console.log(`${process.env.REACT_APP_DEV_API_URL}`)
@@ -27,41 +24,38 @@ class App extends Component {
       venues: [],
       names: [],
       venueID: [],
-      short:   [],
-      searchString: ''
+      short: [],
+      searchString: '',
+      markers: [],
+      photo: [],
+      photoURL: []
    }
 
    updateSearchString = (searchString) => {
       if (searchString) {
-         this.setState({searchString});
+         this.setState({searchString})
       } else {
-         this.setState({searchString: ''});
+         this.setState({searchString: ''})
       }
    }
-
-   componentDidMount () {
-      this.getVenues()
-   }
-
    renderMap = () => {
       loadScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyC5T8bcDZqx_vYa-ApCWu1hcymdMEmK9ek&callback=initMap')
       window.initMap = this.initMap
    }
-
    getVenues = () => {
       const explore = 'https://api.foursquare.com/v2/venues/explore?'
-      const search  = 'https://api.foursquare.com/v2/venues/search?'
-      const venues  = 'https://api.foursquare.com/v2/venues/'
-      const short   = 'https://api.foursquare.com/v2/venues/'
+      const search = 'https://api.foursquare.com/v2/venues/search?'
+      const venues = 'https://api.foursquare.com/v2/venues/'
+      const short = 'https://api.foursquare.com/v2/venues/'
 
       const parameters = {
-         client_id:     `${process.env.REACT_APP_client_id}`, // '5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ', //
+         client_id: `${process.env.REACT_APP_client_id}`, // '5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ', //
          client_secret: `${process.env.REACT_APP_client_secret}`, // 'HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK', //
-         query:         'food', //`${process.env.REACT_APP_food}`,          // 'food', //
-         intent:        'browse', //`${process.env.REACT_APP_browse}`,       // browse, //
-         ll:            '35.522489,-97.619255',                  //35.522489, -97.619255
-         radius:        10000, //`${process.env.REACT_APP_radius}`,       //10000, //
-         v:             `${process.env.REACT_APP_v}`             //'20180908'
+         query: 'food', //`${process.env.REACT_APP_food}`,          // 'food', //
+         intent: 'browse', //`${process.env.REACT_APP_browse}`,       // browse, //
+         ll: '35.522489,-97.619255',                  //35.522489, -97.619255
+         radius: 10000, //`${process.env.REACT_APP_radius}`,       //10000, //
+         v: `${process.env.REACT_APP_v}`             //'20180908'
       }
 
       // {console.log(photos)}
@@ -71,28 +65,21 @@ class App extends Component {
       axios.get(explore + new URLSearchParams(parameters),
          search + new URLSearchParams(parameters),
          venues + new URLSearchParams(parameters),
-         short  + new URLSearchParams(parameters),
+         short + new URLSearchParams(parameters),
       )
          .then(response => {
             this.setState({
                venueID: response.data.response.groups[0].items.map(element => element.venue.id),
-               venues:  response.data.response.groups[0].items,
-               names:   response.data.response.groups[0].items.map(element => element.venue.name),
-               short:   response.data.response.groups[0].items.map(element => element.venue.categories[0].shortName),
+               venues: response.data.response.groups[0].items,
+               names: response.data.response.groups[0].items.map(element => element.venue.name),
+               address: response.data.response.groups[0].items.map(element => element.venue.location.formattedAddress),
+               short: response.data.response.groups[0].items.map(element => element.venue.categories[0].shortName),
             }, this.renderMap())
          })
          .catch(error => {
             console.log('ERROR!! ' + error)
          })
    }
-
-
-
-   // Client ID
-   // 5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ
-   // Client Secret
-   // HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK
-
    initMap = () => {
       // Create A Map
       var map = new window.google.maps.Map(document.getElementById('map'), {
@@ -107,8 +94,14 @@ class App extends Component {
       this.state.venues.map(myVenue => {
          // if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase()))
          //  { //return
-         var contentString = `${myVenue.venue.name}`
-         //var currentVenueItem =
+         if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase())) { //return
+            var contentString =
+               `${myVenue.venue.name + '<br>' +
+               myVenue.venue.location.formattedAddress[0] + '<br>' +
+               myVenue.venue.location.formattedAddress[1] + '<br>' +
+               myVenue.venue.location.formattedAddress[2] + '<br>'
+                  }`
+         }
 
          // Create A Marker
          var marker = new window.google.maps.Marker({
@@ -116,7 +109,7 @@ class App extends Component {
             map: map,
             title: myVenue.venue.name,
             icon: {
-               url: "http://maps.google.com/mapfiles/ms/icons/yellow-dot.png"
+               url: 'http://maps.google.com/mapfiles/ms/icons/yellow-dot.png'
             }
          })
          // } else {
@@ -134,15 +127,41 @@ class App extends Component {
             // Open An InfoWindow
             infowindow.open(map, marker)
          })
+
+         const addAnimaLink = ({response, infoWindows}) => {
+            let photos = response.data.response.photos.items
+            let photoURL
+            let k
+            photos.forEach(photo => {
+               for (k = 0; k < this.state.currentlyDisplayed.length; k++) {
+                  photoURL = `${photo.prefix}${photo.height}x${photo.width}${photo.suffix}`
+               }
+
+               if (`if (this.name === marker.name)`) {
+                  {infoWindows[k].open(map, marker)}
+               }
+            })
+         }
+
       }) // .map
+
+   }
+
+   // Client ID
+   // 5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ
+   // Client Secret
+   // HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK
+
+   componentDidMount () {
+      this.getVenues()
    }
 
    render () {
       return (
 
          <main>
-             {/*https://materializecss.com/ documentation*/}
-             {/*https://react-materialize.github.io/#/*/}
+            {/*https://materializecss.com/ documentation*/}
+            {/*https://react-materialize.github.io/#/*/}
             <Navbar brand='logo' right>
                <NavItem onClick={() => console.log('test click')}>Getting started</NavItem>
                <NavItem href='components.html'>Components</NavItem>
@@ -153,10 +172,10 @@ class App extends Component {
             {/*</Toast>*/}
             <div className="App">
 
-                {/*https://developers.google.com/maps/documentation/javascript/tutorial*/}
+               {/*https://developers.google.com/maps/documentation/javascript/tutorial*/}
                <div id="map"></div>
                <SideBar venues={this.state.names.filter(name =>
-                     name.toLowerCase().includes(this.state.searchString.toLowerCase()))}
+                  name.toLowerCase().includes(this.state.searchString.toLowerCase()))}
                         updateSearchString={this.updateSearchString}
                         handleListItemClick={this.handleListItemClick}
                >
@@ -180,14 +199,14 @@ class App extends Component {
 // Runtime type checking for React props and similar objects.
 // https://www.npmjs.com/package/prop-types
 const myPropTypes = {
-   venues:  PropTypes.object,
-   names:   PropTypes.object,
-   photos:  PropTypes.object,
+   venues: PropTypes.object,
+   names: PropTypes.object,
+   photos: PropTypes.object,
    venueID: PropTypes.object,
-   short:   PropTypes.object,
-   radius:  PropTypes.number,
-   v:       PropTypes.number
-};
+   short: PropTypes.object,
+   radius: PropTypes.number,
+   v: PropTypes.number
+}
 
 function loadScript (url) {
    var index = window.document.getElementsByTagName('script')[0]
@@ -200,24 +219,23 @@ function loadScript (url) {
 
 export default App
 
-
 //ReactDOM.render(<Example/>, document.getElementById('app'))
 
 const handleMarkerClick = marker => {
-   this.closeAllMarkers();
-   marker.isOpen = true;
-   this.setState({markers: Object.assign(this.state.markers, marker) });
+   this.closeAllMarkers()
+   marker.isOpen = true
+   this.setState({markers: Object.assign(this.state.markers, marker)})
    const venue = this.state.venues.find(venue => venue.id === marker.id)
 
    SquareAPI.getVenueDetails(marker.id).then(res => {
-      const newVenue = Object.assign(venue, res.response.venue);
-      this.setState({venues: Object.assign(this.state.venues, newVenue)});
-      console.log(newVenue);
+      const newVenue = Object.assign(venue, res.response.venue)
+      this.setState({venues: Object.assign(this.state.venues, newVenue)})
+      console.log(newVenue)
    })
 }
 
 const handleListItemClick = venues => {
-   const marker = this.state.markers.find(marker => marker.id === venues.id);
-   this.handleMarkerClick(marker);
+   const marker = this.state.markers.find(marker => marker.id === venues.id)
+   this.handleMarkerClick(marker)
    console.log(venues)
 }
