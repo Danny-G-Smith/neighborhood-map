@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 //import ReactDOM from 'react-dom'
+import SquareAPI from "./API/"
+// time at 10:56
 
 import { Footer, Navbar, NavItem } from 'react-materialize'
 import './App.css'
@@ -53,13 +55,13 @@ class App extends Component {
       const short   = 'https://api.foursquare.com/v2/venues/'
 
       const parameters = {
-         client_id:     `${process.env.REACT_APP_client_id}`,
-         client_secret: `${process.env.REACT_APP_client_secret}`,
-         query:         'food',
-         intent:        'browse',
-         ll:            '35.522489,-97.619255',//35.522489, -97.619255
-         radius:        10000,
-         v:            `${process.env.REACT_APP_v}` //'20180908'
+         client_id:     `${process.env.REACT_APP_client_id}`, // '5V3OK3JM0RT0YWWBQR2ZQNB3UJB3V0LM24GQHKEZKBI2EOWQ', //
+         client_secret: `${process.env.REACT_APP_client_secret}`, // 'HYHANVJXDDZKVSHXHVL4XSXXIELLWJVLSM1EHSZB2KTI4XKK', //
+         query:         'food', //`${process.env.REACT_APP_food}`,          // 'food', //
+         intent:        'browse', //`${process.env.REACT_APP_browse}`,       // browse, //
+         ll:            '35.522489,-97.619255',                  //35.522489, -97.619255
+         radius:        10000, //`${process.env.REACT_APP_radius}`,       //10000, //
+         v:             `${process.env.REACT_APP_v}`             //'20180908'
       }
 
       // {console.log(photos)}
@@ -153,14 +155,16 @@ class App extends Component {
 
                 {/*https://developers.google.com/maps/documentation/javascript/tutorial*/}
                <div id="map"></div>
-               <SideBar venues={this.state.names.filter(name => name.toLowerCase().includes(this.state.searchString.toLowerCase()))}
+               <SideBar venues={this.state.names.filter(name =>
+                     name.toLowerCase().includes(this.state.searchString.toLowerCase()))}
                         updateSearchString={this.updateSearchString}
+                        handleListItemClick={this.handleListItemClick}
                >
                   <input className="search"/>
                   <VenueList/>
                </SideBar>
                {/*{console.log(this.venues)}*/}
-               <map></map>
+               <map {...this.state} handleMarkerClick={this.handleMarkerClick}/>
             </div>
             <Footer copyrights="&copy; 2018 Copyright Text"
                     moreLinks={
@@ -181,6 +185,8 @@ const myPropTypes = {
    photos:  PropTypes.object,
    venueID: PropTypes.object,
    short:   PropTypes.object,
+   radius:  PropTypes.number,
+   v:       PropTypes.number
 };
 
 function loadScript (url) {
@@ -194,16 +200,24 @@ function loadScript (url) {
 
 export default App
 
-class Example extends React.Component{
-   simulateClick(e) {
-      e.click()
-   }
-   render(){
-      return <div className="page-footer"
-                  ref={this.simulateClick} onClick={()=> console.log('clicked')}>
-         hello
-      </div>
-   }
-}
 
 //ReactDOM.render(<Example/>, document.getElementById('app'))
+
+const handleMarkerClick = marker => {
+   this.closeAllMarkers();
+   marker.isOpen = true;
+   this.setState({markers: Object.assign(this.state.markers, marker) });
+   const venue = this.state.venues.find(venue => venue.id === marker.id)
+
+   SquareAPI.getVenueDetails(marker.id).then(res => {
+      const newVenue = Object.assign(venue, res.response.venue);
+      this.setState({venues: Object.assign(this.state.venues, newVenue)});
+      console.log(newVenue);
+   })
+}
+
+const handleListItemClick = venues => {
+   const marker = this.state.markers.find(marker => marker.id === venues.id);
+   this.handleMarkerClick(marker);
+   console.log(venues)
+}

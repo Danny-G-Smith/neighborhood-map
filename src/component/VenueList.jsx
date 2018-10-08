@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import VenueItem from './VenueItem'
+import SquareAPI from "../API/"
 
 class VenueList extends Component {
    render () {
@@ -7,7 +8,8 @@ class VenueList extends Component {
          <ol className="venueList">
             {this.props.venues &&
             this.props.venues.map((venue, idx) => (
-               <VenueItem key={idx} name={venue}/>
+               <VenueItem key={idx} name={venue}
+               handleListItemClick={this.props.handleListItemClick}/>
             ))}
          </ol>
       );
