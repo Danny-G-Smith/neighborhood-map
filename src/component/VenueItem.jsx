@@ -1,5 +1,5 @@
 import React from 'react'
-import {handleListItemClickI} from "../API/"
+import {handleListItemClick} from "../API/"
 
 const VenueItem = (props) => {
    return (

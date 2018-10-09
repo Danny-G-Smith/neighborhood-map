@@ -23,19 +23,19 @@ class App extends Component {
    state = {
       venues: [],
       names: [],
-      venueID: [],
+      venue_id: [],
       short: [],
-      searchString: '',
+      search_string: '',
       markers: [],
       photo: [],
-      photoURL: []
+      photo_url: []
    }
 
-   updateSearchString = (searchString) => {
-      if (searchString) {
-         this.setState({searchString})
+   updateSearchString = (search_string) => {
+      if (search_string) {
+         this.setState({search_string})
       } else {
-         this.setState({searchString: ''})
+         this.setState({search_string: ''})
       }
    }
    renderMap = () => {
@@ -69,7 +69,7 @@ class App extends Component {
       )
          .then(response => {
             this.setState({
-               venueID: response.data.response.groups[0].items.map(element => element.venue.id),
+               venue_id: response.data.response.groups[0].items.map(element => element.venue.id),
                venues: response.data.response.groups[0].items,
                names: response.data.response.groups[0].items.map(element => element.venue.name),
                address: response.data.response.groups[0].items.map(element => element.venue.location.formattedAddress),
@@ -92,9 +92,9 @@ class App extends Component {
 
       // Display Dynamic Markers
       this.state.venues.map(myVenue => {
-         // if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase()))
+         // if (myVenue.venue.name.toLowerCase().includes(this.state.search_string.toLowerCase()))
          //  { //return
-         if (myVenue.venue.name.toLowerCase().includes(this.state.searchString.toLowerCase())) { //return
+         if (myVenue.venue.name.toLowerCase().includes(this.state.search_string.toLowerCase())) { //return
             var contentString =
                `${myVenue.venue.name + '<br>' +
                myVenue.venue.location.formattedAddress[0] + '<br>' +
@@ -130,11 +130,11 @@ class App extends Component {
 
          const addAnimaLink = ({response, infoWindows}) => {
             let photos = response.data.response.photos.items
-            let photoURL
+            let photo_url
             let k
             photos.forEach(photo => {
                for (k = 0; k < this.state.currentlyDisplayed.length; k++) {
-                  photoURL = `${photo.prefix}${photo.height}x${photo.width}${photo.suffix}`
+                  photo_url = `${photo.prefix}${photo.height}x${photo.width}${photo.suffix}`
                }
 
                if (`if (this.name === marker.name)`) {
@@ -175,7 +175,7 @@ class App extends Component {
                {/*https://developers.google.com/maps/documentation/javascript/tutorial*/}
                <div id="map"></div>
                <SideBar venues={this.state.names.filter(name =>
-                  name.toLowerCase().includes(this.state.searchString.toLowerCase()))}
+                  name.toLowerCase().includes(this.state.search_string.toLowerCase()))}
                         updateSearchString={this.updateSearchString}
                         handleListItemClick={this.handleListItemClick}
                >
@@ -183,7 +183,7 @@ class App extends Component {
                   <VenueList/>
                </SideBar>
                {/*{console.log(this.venues)}*/}
-               <map {...this.state} handleMarkerClick={this.handleMarkerClick}/>
+               <map {...this.state} handle_marker_click={this.handle_marker_click}/>
             </div>
             <Footer copyrights="&copy; 2018 Copyright Text"
                     moreLinks={
@@ -202,7 +202,7 @@ const myPropTypes = {
    venues: PropTypes.object,
    names: PropTypes.object,
    photos: PropTypes.object,
-   venueID: PropTypes.object,
+   venue_id: PropTypes.object,
    short: PropTypes.object,
    radius: PropTypes.number,
    v: PropTypes.number
@@ -221,7 +221,7 @@ export default App
 
 //ReactDOM.render(<Example/>, document.getElementById('app'))
 
-const handleMarkerClick = marker => {
+const handle_marker_click = marker => {
    this.closeAllMarkers()
    marker.isOpen = true
    this.setState({markers: Object.assign(this.state.markers, marker)})
@@ -236,6 +236,6 @@ const handleMarkerClick = marker => {
 
 const handleListItemClick = venues => {
    const marker = this.state.markers.find(marker => marker.id === venues.id)
-   this.handleMarkerClick(marker)
+   this.handle_marker_click(marker)
    console.log(venues)
 }
