@@ -21,11 +21,13 @@ class App extends Component {
     */
 
    state = {
+      venue: '',
       venues: [],
       names: [],
       venue_id: [],
       short: [],
       search_string: '',
+      marker: '',
       markers: [],
       photo: [],
       photo_url: []
@@ -193,7 +195,28 @@ class App extends Component {
             </Footer>
          </main>
       )
+
+      const handle_marker_click = marker => {
+         this.closeAllMarkers()
+         marker.isOpen = true
+         this.setState({markers: Object.assign(this.state.markers, marker)})
+         const venue = this.state.venues.find(venue => venue.id === marker.id)
+
+         SquareAPI.getVenueDetails(marker.id).then(res => {
+            const newVenue = Object.assign(venue, res.response.venue)
+            this.setState({venues: Object.assign(this.state.venues, newVenue)})
+            console.log(newVenue)
+         })
+      }
+
+      const handleListItemClick = venues => {
+         const marker = this.state.markers.find(marker => marker.id === venues.id)
+         this.handle_marker_click(marker)
+         console.log(venues)
+      }
    }
+
+
 }
 
 // Runtime type checking for React props and similar objects.
@@ -221,21 +244,5 @@ export default App
 
 //ReactDOM.render(<Example/>, document.getElementById('app'))
 
-const handle_marker_click = marker => {
-   this.closeAllMarkers()
-   marker.isOpen = true
-   this.setState({markers: Object.assign(this.state.markers, marker)})
-   const venue = this.state.venues.find(venue => venue.id === marker.id)
 
-   SquareAPI.getVenueDetails(marker.id).then(res => {
-      const newVenue = Object.assign(venue, res.response.venue)
-      this.setState({venues: Object.assign(this.state.venues, newVenue)})
-      console.log(newVenue)
-   })
-}
 
-const handleListItemClick = venues => {
-   const marker = this.state.markers.find(marker => marker.id === venues.id)
-   this.handle_marker_click(marker)
-   console.log(venues)
-}
